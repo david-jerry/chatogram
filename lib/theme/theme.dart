@@ -14,18 +14,9 @@ class ChatogramTheme {
     textSelectionTheme: const TextSelectionThemeData(
       cursorColor: AppColors.blackColor,
     ),
-    colorScheme: const ColorScheme(
-      brightness: Brightness.light,
-      primary: AppColors.primaryColor,
-      onPrimary: AppColors.whiteColor,
-      secondary: AppColors.grey,
-      onSecondary: AppColors.blackColor,
-      error: AppColors.red,
-      onError: AppColors.whiteColor,
-      background: AppColors.grey100,
-      onBackground: AppColors.blackColor,
-      surface: AppColors.whiteColor,
-      onSurface: AppColors.blackColor,
+    colorScheme: ColorScheme.fromSeed(
+      brightness: Brightness.dark,
+      seedColor: AppColors.primaryColor,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
