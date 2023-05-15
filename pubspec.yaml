@@ -1,5 +1,5 @@
 name: chatogram
-description: A new Flutter project.
+description: Easy Chat Messaging App that can be integrated into any system.
 publish_to: 'none'
 version: 0.1.0
 
@@ -20,3 +20,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # add assets like images and sounds
+  assets:
+    - assets/images/chat.png

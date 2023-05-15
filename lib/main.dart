@@ -1,3 +1,4 @@
+import 'package:chatogram/screens/auth/views/create.dart';
 import 'package:chatogram/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,11 +28,7 @@ class MainApp extends StatelessWidget {
       title: 'Chatogram',
       theme: ChatogramTheme.chatogramLightTheme,
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      home: const AuthScreen(),
     );
   }
 }
