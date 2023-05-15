@@ -22,6 +22,15 @@ SizedBox hSizedBox10 = const SizedBox(
 SizedBox hSizedBox14 = const SizedBox(
   height: AppSizes.p14,
 );
+SizedBox hSizedBox18 = const SizedBox(
+  height: AppSizes.p18,
+);
+SizedBox hSizedBox20 = const SizedBox(
+  height: AppSizes.p20,
+);
+SizedBox hSizedBox24 = const SizedBox(
+  height: AppSizes.p24,
+);
 
 /// Width Widgets
 ///  SizeConfig.blockSizeHorizontal *
@@ -42,6 +51,15 @@ SizedBox wSizedBox10 = const SizedBox(
 );
 SizedBox wSizedBox14 = const SizedBox(
   width: AppSizes.p14,
+);
+SizedBox wSizedBox18 = const SizedBox(
+  width: AppSizes.p18,
+);
+SizedBox wSizedBox20 = const SizedBox(
+  width: AppSizes.p20,
+);
+SizedBox wSizedBox24 = const SizedBox(
+  width: AppSizes.p24,
 );
 
 Widget addVerticalSpace(double height) => SizedBox(height: height);

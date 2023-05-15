@@ -1,3 +1,5 @@
+import 'package:chatogram/common/alert.dart';
+import 'package:chatogram/common/connectivity.dart';
 import 'package:chatogram/common/validators.dart';
 import 'package:chatogram/theme/gaps.dart';
 import 'package:chatogram/theme/size.dart';
@@ -13,6 +15,9 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  String _emailInput = '';
+  String _passwordInput = '';
+
   var _isLogin = true;
   final _isLoading = false;
 
@@ -20,7 +25,23 @@ class _AuthScreenState extends State<AuthScreen> {
     _formKey.currentState!.validate();
   }
 
-  void _submit() {}
+  void _submit() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final email = _emailInput;
+      final password = _passwordInput;
+
+      // check if the connection to the internet is available and if the internet is connected through a vpn
+      final connected = await checkConnectivity(context);
+
+      if(connected) {
+        
+      }
+    } else {
+      showErrorMessage(context, "There was an error validating this fields!");
+    }
+  }
 
   // build context here
   @override
@@ -77,11 +98,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
                               return null;
                             },
+                            onSaved: (value) {
+                              _emailInput = value!;
+                            },
                           ),
                           TextFormField(
-                            enableSuggestions: true,
+                            enableSuggestions: false,
                             decoration: const InputDecoration(
                               labelText: 'Password',
+                              helperText:
+                                  'Your password should contain: \n- at-least one UPPERCASE LETTER, \n- one integer and \n- any special characters: !, @, #, \$, %, ^, &, *, (, )...',
                             ),
                             obscureText: true,
                             autocorrect: false,
@@ -112,10 +138,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
                               return null;
                             },
+                            onSaved: (value) {
+                              _passwordInput = value!;
+                            },
                           ),
 
                           // sizedbox
-                          hSizedBox10,
+                          hSizedBox24,
+                          hSizedBox24,
 
                           // submit buttons
                           Row(
