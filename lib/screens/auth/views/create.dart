@@ -47,37 +47,48 @@ class _AuthScreenState extends State<AuthScreen> {
     final password = _passwordInput;
 
     // check if the connection to the internet is available and if the internet is connected through a vpn
-    await checkConnectivity(context);
+    try {
+      await checkConnectivity();
+    } catch (e) {
+      showWarningMessage(context, e.toString());
+    }
 
-    if (_isLogin) {
-      try {
+    // submit the form data to firebase if they exist
+    try {
+      if (_isLogin) {
         // successfully login an existing user
         final response = await firebaseInstance.signInWithEmailAndPassword(
             email: email, password: password);
         print(response);
-      } on FirebaseAuthException catch (error) {
-        // show error messages if the registration failed
-        if (error.code == 'email-already-in-use') {
-          showErrorMessage(
-              context, "There is no user with this email address!");
-        }
-        showErrorMessage(context, error.message ?? "Authentication Failed!");
-      }
-    } else {
-      try {
+      } else {
         // successfully create a new user
         final response = await firebaseInstance.createUserWithEmailAndPassword(
             email: email, password: password);
 
         print(response);
-      } on FirebaseAuthException catch (error) {
-        // show error messages if the registration failed
-        if (error.code == 'email-already-in-use') {
-          showErrorMessage(
-              context, "There is an existing user with this email address!");
-        }
-        showErrorMessage(context, error.message ?? "Authentication Failed!");
       }
+    } on FirebaseAuthException catch (error) {
+      print("Error Code: ${error.code}");
+      // // show error messages if the registration failed
+      // if (error.code == 'user-not-found') {
+      //   showErrorMessage(context, "There is no user with this email address!");
+      // }
+
+      // if (error.code == 'user-disabled') {
+      //   showInfoMessage(context,
+      //       "This user has been disabled! try contacting the authenticators at\n\n **(authentication@chatogram.com)** \nwith the subject \n\n **'Account Disabled'**");
+      // }
+
+      // // show error messages if the registration failed
+      // if (error.code == 'email-already-in-use') {
+      //   showErrorMessage(
+      //       context, "There is an existing user with this email address!");
+      // }
+
+      // if (error.code == 'operation-not-allowed') {
+      //   showErrorMessage(context, "The operation is not allowed!");
+      // }
+      error.code == "network-request-failed" ? showWarningMessage(context, error.message ?? "Network Error! Please check your network connectivity") : showErrorMessage(context, error.message ?? "Authentication Failed!");
     }
   }
 
