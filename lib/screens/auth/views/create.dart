@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chatogram/common/alert.dart';
 import 'package:chatogram/common/connectivity.dart';
+import 'package:chatogram/common/constants.dart';
 import 'package:chatogram/common/validators.dart';
 import 'package:chatogram/theme/gaps.dart';
 import 'package:chatogram/theme/size.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -18,28 +22,62 @@ class _AuthScreenState extends State<AuthScreen> {
   String _emailInput = '';
   String _passwordInput = '';
 
-  var _isLogin = true;
-  final _isLoading = false;
+  bool _isLogin = true;
+  final bool _isLoading = false;
 
   void _validateItem() {
     _formKey.currentState!.validate();
   }
 
   void _submit() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    // validate form data else stop the form if it is not valid
+    _validateItem();
 
-      final email = _emailInput;
-      final password = _passwordInput;
+    if (!_formKey.currentState!.validate()) {
+      showErrorMessage(context, "There was an error validating this fields!");
+      return;
+    }
+    // end validation here
 
-      // check if the connection to the internet is available and if the internet is connected through a vpn
-      final connected = await checkConnectivity(context);
+    // confirm the value from the saved textfield input
+    _formKey.currentState!.save();
 
-      if(connected) {
-        
+    // pass the saved or validated data here to be sent into the backend
+    final email = _emailInput;
+    final password = _passwordInput;
+
+    // check if the connection to the internet is available and if the internet is connected through a vpn
+    await checkConnectivity(context);
+
+    if (_isLogin) {
+      try {
+        // successfully login an existing user
+        final response = await firebaseInstance.signInWithEmailAndPassword(
+            email: email, password: password);
+        print(response);
+      } on FirebaseAuthException catch (error) {
+        // show error messages if the registration failed
+        if (error.code == 'email-already-in-use') {
+          showErrorMessage(
+              context, "There is no user with this email address!");
+        }
+        showErrorMessage(context, error.message ?? "Authentication Failed!");
       }
     } else {
-      showErrorMessage(context, "There was an error validating this fields!");
+      try {
+        // successfully create a new user
+        final response = await firebaseInstance.createUserWithEmailAndPassword(
+            email: email, password: password);
+
+        print(response);
+      } on FirebaseAuthException catch (error) {
+        // show error messages if the registration failed
+        if (error.code == 'email-already-in-use') {
+          showErrorMessage(
+              context, "There is an existing user with this email address!");
+        }
+        showErrorMessage(context, error.message ?? "Authentication Failed!");
+      }
     }
   }
 
@@ -84,9 +122,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
-                            onChanged: (value) {
-                              _validateItem();
-                            },
+                            // onChanged: (value) {
+                            //   _validateItem();
+                            // },
                             validator: (value) {
                               if (!validateRequired(value!)) {
                                 return "This field is required!";
@@ -112,9 +150,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             obscureText: true,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
-                            onChanged: (value) {
-                              _validateItem();
-                            },
+                            // onChanged: (value) {
+                            //   _validateItem();
+                            // },
                             validator: (value) {
                               if (!validateRequired(value!)) {
                                 return "This field is required!";
