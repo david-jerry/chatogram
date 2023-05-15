@@ -53,6 +53,8 @@ flutterfire run
 ## Dependencies Used
 
 - connectivity_plus
+- firebase_core
+- firebase_auth
 - flutter_riverpod
 - flutter_svg
 - google_fonts
